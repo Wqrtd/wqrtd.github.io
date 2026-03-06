@@ -1,0 +1,420 @@
+html, body {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+html {
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: sans-serif;
+    color: #5c3a21;
+    margin: 0;
+    background-image: url('../img/background.jpg');
+    background-repeat: no-repeat; /* Prevent the background from repeating */
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed; /* Keep the background fixed */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Use min-height: 100vh to ensure the body takes at least the full viewport height */
+    width: 100%; /* Ensure body takes full width */
+}
+
+main {
+    flex: 1 0 auto;
+    padding: 1rem;
+    background-color: transparent;
+    padding-top: 80px; /* Add padding to avoid content being hidden by the sticky header */
+}
+
+footer {
+    flex-shrink: 0;
+    background-color: #f2f2f2;
+    color: #5b231a;
+    text-align: center;
+    padding: 0.5rem 2rem; /* Further reduced padding */
+    width: 100%;
+    border-top: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem; /* Reduced space between contact info and copyright */
+}
+
+.contact-info {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-content p {
+    margin: 0;
+}
+
+/* Header Styles */
+header {
+    background-color: #f2f2f2;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    position: fixed; /* Make header sticky */
+    top: 0;
+    left: 0;
+    right: 0; /* Ensures the header spans the full width */
+    z-index: 1000;
+    transition: padding 0.3s ease, background-color 0.3s ease;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+header.scrolled {
+    padding: 5px 30px;
+    background-color: rgba(242, 242, 242, 0.9);
+}
+
+.logo-container {
+    flex-shrink: 0;
+}
+
+.logo-container img {
+    height: 50px;
+    display: block;
+    transition: height 0.3s ease;
+}
+
+header.scrolled .logo-container img {
+    height: 40px;
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    font-family: 'Arial Black', 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #5b231a;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #3d1710;
+}
+
+nav a.button {
+    color: #ba2114;
+    background-color: #ffffff;
+    border: 2px solid #ba2114;
+    border-radius: 30px;
+    padding: 8px 20px;
+    transition: background-color 0.3s ease, color 0.3s ease, padding 0.3s ease;
+}
+
+header.scrolled nav a.button {
+    padding: 6px 18px;
+}
+
+nav a.button:hover {
+    background-color: #ba2114;
+    color: #ffffff;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px 0;
+    background-color: #5b231a;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Main Page Info Cards */
+.info-section-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+}
+
+.info-card {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.info-card:nth-child(even) .info-card-img {
+    order: 2;
+}
+
+.info-card-img {
+    flex: 1.5;
+    min-height: 250px;
+}
+
+.info-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info-card-content {
+    flex: 2;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.info-card-content h2 {
+    font-family: 'Arial Black', 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #5b231a;
+    margin-top: 0;
+}
+
+.info-card-content p {
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.info-card-button {
+    align-self: flex-start;
+    font-family: 'Arial Black', 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #ba2114;
+    background-color: #ffffff;
+    border: 2px solid #ba2114;
+    border-radius: 30px;
+    padding: 8px 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.info-card-button:hover {
+    background-color: #ba2114;
+    color: #ffffff;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav {
+        order: 1;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #f2f2f2;
+        padding: 1rem 0;
+    }
+
+    nav.nav-open ul {
+        display: flex;
+    }
+
+    .hamburger {
+        display: block;
+        order: 2;
+    }
+
+    .info-card {
+        flex-direction: column;
+    }
+
+    .info-card:nth-child(even) .info-card-img {
+        order: 0;
+    }
+}
+
+/* Order Page Banner Styling */
+main.order-banner {
+    background-color: transparent;
+    padding: 120px 20px 40px;
+}
+
+.order-container {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.order-container h1 {
+    font-family: 'Arial Black', 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #5b231a;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.order-form fieldset {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.order-form legend {
+    font-family: 'Arial Black', 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #5b231a;
+    padding: 0 10px;
+    margin-left: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #5c3a21;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.form-group-checkbox label {
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+.submit-btn {
+    font-family: 'Arial Black', 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: #ba2114;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #9a1b10;
+}
+
+/* Menu Page Styles */
+.menu-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.menu-category {
+    margin-bottom: 50px;
+}
+
+.menu-category h2 {
+    font-family: 'Arial Black', 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.menu-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.menu-item-details {
+    padding: 20px;
+    text-align: center;
+}
+
+.item-name {
+    font-family: 'Arial Black', 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #5b231a;
+    margin: 0 0 10px 0;
+}
+
+.item-description {
+    font-size: 1rem;
+    color: #5c3a21;
+    margin: 0 0 15px 0;
+    line-height: 1.5;
+}
+
+.item-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ba2114;
+}
