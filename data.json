@@ -1,0 +1,146 @@
+[
+  {
+    "title": "ChatGPT",
+    "description": "OpenAI's powerful conversational AI for coding, writing, and brainstorming.",
+    "url": "https://chat.openai.com/",
+    "tag": "AI Chat"
+  },
+  {
+    "title": "Claude",
+    "description": "Anthropic's AI assistant, known for excellent coding abilities and large context windows.",
+    "url": "https://claude.ai/",
+    "tag": "AI Chat"
+  },
+  {
+    "title": "Google Gemini",
+    "description": "Google's multimodal AI model for reasoning, math, and code generation.",
+    "url": "https://gemini.google.com/",
+    "tag": "AI Chat"
+  },
+  {
+    "title": "Perplexity",
+    "description": "An AI-powered search engine that provides cited answers and up-to-date information.",
+    "url": "https://www.perplexity.ai/",
+    "tag": "AI Search"
+  },
+  {
+    "title": "GitHub Copilot",
+    "description": "Your AI pair programmer that suggests code and entire functions in real-time.",
+    "url": "https://github.com/features/copilot",
+    "tag": "AI Coding"
+  },
+  {
+    "title": "Cursor",
+    "description": "An AI-first code editor built to make you extraordinarily productive.",
+    "url": "https://cursor.sh/",
+    "tag": "AI Editor"
+  },
+  {
+    "title": "V0 by Vercel",
+    "description": "Generative UI system that produces React code based on text prompts and images.",
+    "url": "https://v0.dev/",
+    "tag": "AI UI"
+  },
+  {
+    "title": "Regex101",
+    "description": "An interactive tool for testing and debugging regular expressions with live explanations.",
+    "url": "https://regex101.com/",
+    "tag": "Debugging"
+  },
+  {
+    "title": "JSON Crack",
+    "description": "Seamlessly visualize your JSON data instantly into interactive graphs.",
+    "url": "https://jsoncrack.com/",
+    "tag": "Visualization"
+  },
+  {
+    "title": "Excalidraw",
+    "description": "Virtual whiteboard for sketching hand-drawn like diagrams and software architecture.",
+    "url": "https://excalidraw.com/",
+    "tag": "Design"
+  },
+  {
+    "title": "Figma",
+    "description": "The collaborative interface design tool. A must-have for modern UI/UX workflows.",
+    "url": "https://www.figma.com/",
+    "tag": "Design"
+  },
+  {
+    "title": "Bundlephobia",
+    "description": "Find out the performance impact (size and download time) of adding an npm package to your frontend.",
+    "url": "https://bundlephobia.com/",
+    "tag": "Performance"
+  },
+  {
+    "title": "DevDocs",
+    "description": "Combines multiple API documentations in a fast, organized, and searchable interface (works offline).",
+    "url": "https://devdocs.io/",
+    "tag": "Documentation"
+  },
+  {
+    "title": "Ray.so",
+    "description": "Create beautiful, customizable images of your source code to share on social media or in presentations.",
+    "url": "https://ray.so/",
+    "tag": "Tools"
+  },
+  {
+    "title": "Carbon",
+    "description": "Another popular tool for creating and sharing beautiful images of your source code.",
+    "url": "https://carbon.now.sh/",
+    "tag": "Tools"
+  },
+  {
+    "title": "Roadmap.sh",
+    "description": "Step by step guides and paths to learn different tools or technologies in software development.",
+    "url": "https://roadmap.sh/",
+    "tag": "Learning"
+  },
+  {
+    "title": "CodeSandbox",
+    "description": "An online code editor and prototyping tool that makes creating web apps faster.",
+    "url": "https://codesandbox.io/",
+    "tag": "Editor"
+  },
+  {
+    "title": "Ngrok",
+    "description": "Expose your local web server to the internet with a public URL (great for testing webhooks).",
+    "url": "https://ngrok.com/",
+    "tag": "Networking"
+  },
+  {
+    "title": "Postman",
+    "description": "An API platform for building and using APIs. Excellent for testing backend endpoints.",
+    "url": "https://www.postman.com/",
+    "tag": "API Testing"
+  },
+  {
+    "title": "Can I use",
+    "description": "Up-to-date browser support tables for support of front-end web technologies on desktop and mobile.",
+    "url": "https://caniuse.com/",
+    "tag": "Frontend"
+  },
+  {
+    "title": "Tailwind Components",
+    "description": "A free repository for community-submitted Tailwind CSS UI components.",
+    "url": "https://tailwindcomponents.com/",
+    "tag": "Frontend"
+  },
+  {
+    "title": "Vercel",
+    "description": "A cloud platform for static sites and Serverless Functions that fits perfectly with your workflow.",
+    "url": "https://vercel.com/",
+    "tag": "Hosting"
+  },
+  {
+    "title": "Netlify",
+    "description": "A powerful platform for deploying modern web projects instantly without configuring servers.",
+    "url": "https://www.netlify.com/",
+    "tag": "Hosting"
+  },
+  {
+    "title": "Supabase",
+    "description": "An open source Firebase alternative with a Postgres database, Authentication, and instant APIs.",
+    "url": "https://supabase.com/",
+    "tag": "Backend"
+  }
+]

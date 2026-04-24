@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Useful Resources Directory</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Useful IT Resources Directory</h1>
+        <p>A collection of the best websites and tools for developers</p>
+    </header>
+
+    <main>
+        <div class="controls-container">
+            <input type="text" id="search-input" placeholder="Search resources...">
+            <div class="filters">
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                </select>
+                <select id="sort-select">
+                    <option value="default">Default Order</option>
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Cards from JSON will be loaded here -->
+        <div id="resources-container" class="container">
+            <p>Loading data...</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Created for GitHub Pages</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
