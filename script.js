@@ -27,108 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let resourcesData = []; // Store original data
 
-    // --- LocalStorage Logic for Credentials ---
-    // SessionStorage вместо LocalStorage, чтобы данные удалялись при закрытии вкладки.
-    const STORAGE_KEY_TOKEN = 'github_pat_token';
-    const STORAGE_KEY_REPO = 'github_repo_name';
-
-    // Load saved credentials from SessionStorage (not LocalStorage)
-    const savedToken = sessionStorage.getItem(STORAGE_KEY_TOKEN) || '';
-    const savedRepo = sessionStorage.getItem(STORAGE_KEY_REPO) || '';
-
-    if (document.getElementById('github-token')) document.getElementById('github-token').value = savedToken;
-    if (document.getElementById('github-repo')) document.getElementById('github-repo').value = savedRepo;
-    if (document.getElementById('del-github-token')) document.getElementById('del-github-token').value = savedToken;
-    if (document.getElementById('del-github-repo')) document.getElementById('del-github-repo').value = savedRepo;
-
-    function saveCredentials(token, repo) {
-        // Сохраняем только в sessionStorage (до закрытия вкладки)
-        sessionStorage.setItem(STORAGE_KEY_TOKEN, token);
-        sessionStorage.setItem(STORAGE_KEY_REPO, repo);
-
-        // Sync both forms
-        if (document.getElementById('github-token')) document.getElementById('github-token').value = token;
-        if (document.getElementById('github-repo')) document.getElementById('github-repo').value = repo;
-        if (document.getElementById('del-github-token')) document.getElementById('del-github-token').value = token;
-        if (document.getElementById('del-github-repo')) document.getElementById('del-github-repo').value = repo;
-    }
-
-
     // --- Core Loading and Display Functions ---
 
     async function loadData() {
         try {
-            // Если у нас есть токен и репо, попробуем загрузить данные НАПРЯМУЮ через GitHub API,
-            // чтобы обойти 1-минутный кэш GitHub Pages.
-            // Если нет токена - загружаем обычный data.json
-            let useDirectGithubApi = false;
+            const response = await fetch(`data.json?t=${new Date().getTime()}`);
+            if (!response.ok) throw new Error(`Loading error: ${response.status}`);
 
-            // ПРОВЕРКА: Делаем запрос к API только если есть токен и он похож на валидный
-            // (ghp_ или github_pat_ обычно используются)
-            if (savedToken && savedRepo && savedToken.length > 10) {
-                try {
-                    const githubApiUrl = `https://api.github.com/repos/${savedRepo}/contents/data.json`;
-                    const apiResponse = await fetch(githubApiUrl, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `token ${savedToken}`,
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Cache-Control': 'no-cache'
-                        }
-                    });
-
-                    if (apiResponse.ok) {
-                        const fileData = await apiResponse.json();
-                        const decodedContent = decodeURIComponent(escape(atob(fileData.content)));
-                        resourcesData = JSON.parse(decodedContent);
-                        useDirectGithubApi = true;
-                    } else {
-                        // Если API ответил ошибкой (например, 401 из-за неверного/устаревшего токена),
-                        // не падаем, а переключаемся на загрузку обычного файла
-                        console.warn(`GitHub API request failed with status: ${apiResponse.status}. Falling back to normal JSON load.`);
-                    }
-                } catch (e) {
-                    console.log("Direct API load failed, falling back to static file", e);
-                }
-            }
-
-            if (!useDirectGithubApi) {
-                // Если мы тестируем локально (file://), fetch не работает на локальные файлы без сервера.
-                // Нам нужно определить, находимся ли мы на file:// протоколе.
-                const isFileProtocol = window.location.protocol === 'file:';
-
-                let jsonUrl = `data.json?t=${new Date().getTime()}`;
-
-                // Для file:// протокола параметры URL (?t=...) ломают запрос (Failed to fetch).
-                // И сам fetch может быть заблокирован CORS политикой браузера для file://.
-                if (isFileProtocol) {
-                    jsonUrl = 'data.json';
-                }
-
-                try {
-                    const response = await fetch(jsonUrl);
-                    if (!response.ok) throw new Error(`Loading error: ${response.status}`);
-                    resourcesData = await response.json();
-                } catch(fetchError) {
-                    // Если мы локально открыли файл в браузере (file://...) и fetch упал (CORS),
-                    // мы должны показать пользователю понятную ошибку.
-                    if(isFileProtocol) {
-                        throw new Error(`Browser blocked local file access. Please use 'Live Server' or 'python -m http.server'.`);
-                    } else {
-                        throw fetchError;
-                    }
-                }
-            }
-
+            resourcesData = await response.json();
             populateCategories(resourcesData);
             updateDisplay();
         } catch (error) {
             console.error('Error:', error);
-            container.innerHTML = `<p style="color: #ef4444; text-align:center; grid-column: 1/-1;">
-                <strong>Failed to load data.</strong><br>
-                ${error.message}<br>
-                <em>If you are opening index.html directly from a folder, you need to run a local server (e.g. using VS Code Live Server).</em>
-            </p>`;
+            container.innerHTML = `<p style="color: #ef4444; text-align:center; grid-column: 1/-1;">Failed to load data.</p>`;
         }
     }
 
@@ -267,7 +178,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 tag: document.getElementById('res-tag').value.trim()
             };
 
-            saveCredentials(token, repo);
+            // Copy credentials to delete form for convenience
+            document.getElementById('del-github-token').value = token;
+            document.getElementById('del-github-repo').value = repo;
 
             await updateGithubData(token, repo, (currentJson) => {
                 currentJson.unshift(newResource);
@@ -276,13 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 resourcesData.unshift(newResource);
                 populateCategories(resourcesData);
                 updateDisplay();
-
-                // Clear input fields but leave token/repo
-                document.getElementById('res-title').value = '';
-                document.getElementById('res-desc').value = '';
-                document.getElementById('res-url').value = '';
-                document.getElementById('res-tag').value = '';
-
                 setTimeout(() => { adminModal.style.display = "none"; resetAdminForm(); }, 1500);
             });
         });
@@ -318,7 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const repo = document.getElementById('del-github-repo').value.trim();
             const resourceTitle = resourcesData[resourceToDeleteIndex].title;
 
-            saveCredentials(token, repo);
+            // Copy credentials to add form for convenience
+            document.getElementById('github-token').value = token;
+            document.getElementById('github-repo').value = repo;
 
             await updateGithubData(token, repo, (currentJson) => {
                 currentJson.splice(resourceToDeleteIndex, 1);
@@ -347,11 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const getResponse = await fetch(githubApiUrl, {
                 method: 'GET',
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Cache-Control': 'no-cache'
-                }
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
             });
 
             if (!getResponse.ok) {
