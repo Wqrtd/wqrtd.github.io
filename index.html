@@ -24,6 +24,71 @@
                     <option value="name-asc">Name (A-Z)</option>
                     <option value="name-desc">Name (Z-A)</option>
                 </select>
+                <button id="admin-panel-btn" class="admin-btn">Add Resource</button>
+                <!-- Добавлена кнопка включения режима редактирования/удаления -->
+                <button id="toggle-admin-mode-btn" class="admin-btn" style="background-color: #64748b;">Edit Mode</button>
+            </div>
+        </div>
+
+        <!-- Admin Panel Modal -->
+        <div id="admin-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Add New Resource</h2>
+                <p class="admin-desc">To save this permanently on GitHub, provide your Personal Access Token.</p>
+
+                <form id="admin-form">
+                    <div class="form-group">
+                        <label for="github-token">GitHub Token (PAT)</label>
+                        <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxxxxxxx" required>
+                        <small>Requires 'repo' scope. Token is never saved.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="github-repo">GitHub Repo (username/repo)</label>
+                        <input type="text" id="github-repo" placeholder="octocat/my-resources" required>
+                        <small>The repository where data.json is located.</small>
+                    </div>
+                    <hr class="form-divider">
+                    <div class="form-group">
+                        <label for="res-title">Title</label>
+                        <input type="text" id="res-title" placeholder="E.g. CodePen" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="res-desc">Description</label>
+                        <input type="text" id="res-desc" placeholder="A brief description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="res-url">URL</label>
+                        <input type="url" id="res-url" placeholder="https://..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="res-tag">Tag / Category</label>
+                        <input type="text" id="res-tag" placeholder="E.g. Editor" required>
+                    </div>
+                    <button type="submit" id="save-btn" class="save-btn">Push to GitHub</button>
+                    <div id="admin-status" class="status-msg"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно для подтверждения удаления -->
+        <div id="delete-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-delete-btn close-btn">&times;</span>
+                <h2>Delete Resource</h2>
+                <p class="admin-desc" id="delete-confirm-text">Are you sure you want to delete this resource?</p>
+                <form id="delete-form">
+                    <div class="form-group">
+                        <label for="del-github-token">GitHub Token (PAT)</label>
+                        <input type="password" id="del-github-token" placeholder="ghp_xxxxxxxxxxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="del-github-repo">GitHub Repo (username/repo)</label>
+                        <input type="text" id="del-github-repo" placeholder="octocat/my-resources" required>
+                    </div>
+                    <button type="submit" id="confirm-delete-btn" class="save-btn" style="background-color: #ef4444;">Delete from GitHub</button>
+                    <div id="delete-status" class="status-msg"></div>
+                </form>
             </div>
         </div>
 
