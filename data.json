@@ -1,11 +1,5 @@
 [
   {
-    "title": "1",
-    "description": "1",
-    "url": "https://www.google.com/search?q=gmail&oq=&gs_lcrp=EgZjaHJvbWUqCQgAECMYJxjqAjIJCAAQIxgnGOoCMgkIARAjGCcY6gIyCQgCECMYJxjqAjIJCAMQIxgnGOoCMgkIBBAjGCcY6gIyCQgFECMYJxjqAjIJCAYQIxgnGOoCMgkIBxAjGCcY6gLSAQoxNTA3MDZqMGo3qAIIsAIB8QXbDsDVmBBeBw&sourceid=chrome&ie=UTF-8",
-    "tag": "link"
-  },
-  {
     "title": "ChatGPT",
     "description": "OpenAI's powerful conversational AI for coding, writing, and brainstorming.",
     "url": "https://chat.openai.com/",
