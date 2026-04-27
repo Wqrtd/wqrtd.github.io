@@ -27,14 +27,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let resourcesData = []; // Store original data
 
+    // --- LocalStorage Logic for Credentials ---
+    // SessionStorage вместо LocalStorage, чтобы данные удалялись при закрытии вкладки.
+    const STORAGE_KEY_TOKEN = 'github_pat_token';
+    const STORAGE_KEY_REPO = 'github_repo_name';
+
+    // Load saved credentials from SessionStorage (not LocalStorage)
+    const savedToken = sessionStorage.getItem(STORAGE_KEY_TOKEN) || '';
+    const savedRepo = sessionStorage.getItem(STORAGE_KEY_REPO) || '';
+
+    if (document.getElementById('github-token')) document.getElementById('github-token').value = savedToken;
+    if (document.getElementById('github-repo')) document.getElementById('github-repo').value = savedRepo;
+    if (document.getElementById('del-github-token')) document.getElementById('del-github-token').value = savedToken;
+    if (document.getElementById('del-github-repo')) document.getElementById('del-github-repo').value = savedRepo;
+
+    function saveCredentials(token, repo) {
+        // Сохраняем только в sessionStorage (до закрытия вкладки)
+        sessionStorage.setItem(STORAGE_KEY_TOKEN, token);
+        sessionStorage.setItem(STORAGE_KEY_REPO, repo);
+
+        // Sync both forms
+        if (document.getElementById('github-token')) document.getElementById('github-token').value = token;
+        if (document.getElementById('github-repo')) document.getElementById('github-repo').value = repo;
+        if (document.getElementById('del-github-token')) document.getElementById('del-github-token').value = token;
+        if (document.getElementById('del-github-repo')) document.getElementById('del-github-repo').value = repo;
+    }
+
+
     // --- Core Loading and Display Functions ---
 
     async function loadData() {
         try {
-            const response = await fetch(`data.json?t=${new Date().getTime()}`);
-            if (!response.ok) throw new Error(`Loading error: ${response.status}`);
+            // Если у нас есть токен и репо, попробуем загрузить данные НАПРЯМУЮ через GitHub API,
+            // чтобы обойти 1-минутный кэш GitHub Pages.
+            // Если нет токена - загружаем обычный data.json
+            let useDirectGithubApi = false;
+            if (savedToken && savedRepo) {
+                try {
+                    const githubApiUrl = `https://api.github.com/repos/${savedRepo}/contents/data.json`;
+                    const apiResponse = await fetch(githubApiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `token ${savedToken}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Cache-Control': 'no-cache'
+                        }
+                    });
 
-            resourcesData = await response.json();
+                    if (apiResponse.ok) {
+                        const fileData = await apiResponse.json();
+                        const decodedContent = decodeURIComponent(escape(atob(fileData.content)));
+                        resourcesData = JSON.parse(decodedContent);
+                        useDirectGithubApi = true;
+                    }
+                } catch (e) {
+                    console.log("Direct API load failed, falling back to static file", e);
+                }
+            }
+
+            if (!useDirectGithubApi) {
+                const response = await fetch(`data.json?t=${new Date().getTime()}`);
+                if (!response.ok) throw new Error(`Loading error: ${response.status}`);
+                resourcesData = await response.json();
+            }
+
             populateCategories(resourcesData);
             updateDisplay();
         } catch (error) {
@@ -178,9 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tag: document.getElementById('res-tag').value.trim()
             };
 
-            // Copy credentials to delete form for convenience
-            document.getElementById('del-github-token').value = token;
-            document.getElementById('del-github-repo').value = repo;
+            saveCredentials(token, repo);
 
             await updateGithubData(token, repo, (currentJson) => {
                 currentJson.unshift(newResource);
@@ -189,6 +243,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 resourcesData.unshift(newResource);
                 populateCategories(resourcesData);
                 updateDisplay();
+
+                // Clear input fields but leave token/repo
+                document.getElementById('res-title').value = '';
+                document.getElementById('res-desc').value = '';
+                document.getElementById('res-url').value = '';
+                document.getElementById('res-tag').value = '';
+
                 setTimeout(() => { adminModal.style.display = "none"; resetAdminForm(); }, 1500);
             });
         });
@@ -224,9 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const repo = document.getElementById('del-github-repo').value.trim();
             const resourceTitle = resourcesData[resourceToDeleteIndex].title;
 
-            // Copy credentials to add form for convenience
-            document.getElementById('github-token').value = token;
-            document.getElementById('github-repo').value = repo;
+            saveCredentials(token, repo);
 
             await updateGithubData(token, repo, (currentJson) => {
                 currentJson.splice(resourceToDeleteIndex, 1);
@@ -255,7 +314,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const getResponse = await fetch(githubApiUrl, {
                 method: 'GET',
-                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Cache-Control': 'no-cache'
+                }
             });
 
             if (!getResponse.ok) {
