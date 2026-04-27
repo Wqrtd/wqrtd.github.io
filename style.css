@@ -113,11 +113,12 @@ header p {
     background-color: #059669;
 }
 
-.admin-mode-active .admin-btn {
-    background-color: var(--danger-color);
+body.admin-mode-active #toggle-admin-mode-btn {
+    background-color: var(--danger-color) !important;
 }
-.admin-mode-active .admin-btn:hover {
-    background-color: var(--danger-hover);
+
+body.admin-mode-active #toggle-admin-mode-btn:hover {
+    background-color: var(--danger-hover) !important;
 }
 
 /* Modal Styles */
@@ -302,7 +303,7 @@ header p {
     transition: color 0.2s;
 }
 
-.admin-mode-active .delete-btn {
+body.admin-mode-active .delete-btn {
     display: block;
 }
 
