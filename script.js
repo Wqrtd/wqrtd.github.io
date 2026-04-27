@@ -62,7 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // чтобы обойти 1-минутный кэш GitHub Pages.
             // Если нет токена - загружаем обычный data.json
             let useDirectGithubApi = false;
-            if (savedToken && savedRepo) {
+
+            // ПРОВЕРКА: Делаем запрос к API только если есть токен и он похож на валидный
+            // (ghp_ или github_pat_ обычно используются)
+            if (savedToken && savedRepo && savedToken.length > 10) {
                 try {
                     const githubApiUrl = `https://api.github.com/repos/${savedRepo}/contents/data.json`;
                     const apiResponse = await fetch(githubApiUrl, {
@@ -79,6 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         const decodedContent = decodeURIComponent(escape(atob(fileData.content)));
                         resourcesData = JSON.parse(decodedContent);
                         useDirectGithubApi = true;
+                    } else {
+                        // Если API ответил ошибкой (например, 401 из-за неверного/устаревшего токена),
+                        // не падаем, а переключаемся на загрузку обычного файла
+                        console.warn(`GitHub API request failed with status: ${apiResponse.status}. Falling back to normal JSON load.`);
                     }
                 } catch (e) {
                     console.log("Direct API load failed, falling back to static file", e);
@@ -86,16 +93,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!useDirectGithubApi) {
-                const response = await fetch(`data.json?t=${new Date().getTime()}`);
-                if (!response.ok) throw new Error(`Loading error: ${response.status}`);
-                resourcesData = await response.json();
+                // Если мы тестируем локально (file://), fetch не работает на локальные файлы без сервера.
+                // Нам нужно определить, находимся ли мы на file:// протоколе.
+                const isFileProtocol = window.location.protocol === 'file:';
+
+                let jsonUrl = `data.json?t=${new Date().getTime()}`;
+
+                // Для file:// протокола параметры URL (?t=...) ломают запрос (Failed to fetch).
+                // И сам fetch может быть заблокирован CORS политикой браузера для file://.
+                if (isFileProtocol) {
+                    jsonUrl = 'data.json';
+                }
+
+                try {
+                    const response = await fetch(jsonUrl);
+                    if (!response.ok) throw new Error(`Loading error: ${response.status}`);
+                    resourcesData = await response.json();
+                } catch(fetchError) {
+                    // Если мы локально открыли файл в браузере (file://...) и fetch упал (CORS),
+                    // мы должны показать пользователю понятную ошибку.
+                    if(isFileProtocol) {
+                        throw new Error(`Browser blocked local file access. Please use 'Live Server' or 'python -m http.server'.`);
+                    } else {
+                        throw fetchError;
+                    }
+                }
             }
 
             populateCategories(resourcesData);
             updateDisplay();
         } catch (error) {
             console.error('Error:', error);
-            container.innerHTML = `<p style="color: #ef4444; text-align:center; grid-column: 1/-1;">Failed to load data.</p>`;
+            container.innerHTML = `<p style="color: #ef4444; text-align:center; grid-column: 1/-1;">
+                <strong>Failed to load data.</strong><br>
+                ${error.message}<br>
+                <em>If you are opening index.html directly from a folder, you need to run a local server (e.g. using VS Code Live Server).</em>
+            </p>`;
         }
     }
 

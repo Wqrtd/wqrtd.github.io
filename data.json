@@ -160,5 +160,17 @@
     "description": "The super fast color palettes generator! Create the perfect palette or get inspired by thousands of beautiful color schemes.",
     "url": "https://coolors.co/",
     "tag": "Design"
+  },
+  {
+    "title": "Mockaroo",
+    "description": "Generate up to 1,000 rows of realistic test data in CSV, JSON, SQL, and Excel formats.",
+    "url": "https://www.mockaroo.com/",
+    "tag": "Testing"
+  },
+  {
+    "title": "Fontjoy",
+    "description": "Generate font pairings in one click. Discover the perfect typography combination for your project.",
+    "url": "https://fontjoy.com/",
+    "tag": "Typography"
   }
 ]
